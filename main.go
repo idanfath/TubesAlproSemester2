@@ -1,31 +1,18 @@
-package mindflow
+package main
 
-import (
-	"fmt"
-)
+var SigKill bool = false
 
 func main() {
-	fmt.Println(center("Hello, World!"))
-	fmt.Println(center("My CLI App"))
-	var test = Table{
-		Header: []string{"Name", "Age", "City"},
-		Rows: [][]any{
-			{"Alice", 30, "New York"},
-			{"Bob", "agus", "Los Angeles"},
-			{"Charlie", 35, "Chicago"},
-		},
+	for {
+		render()
+		if SigKill {
+			render()
+			break
+		}
 	}
-	printTable(test)
-	var testOption = Options{
-		{
-			Name: "Bayar",
-		},
-		{
-			Name: "Gaaaaaaaaaaaaa",
-		},
-		{
-			Name: "Exit",
-		},
-	}
-	printOptions(testOption)
+}
+
+func exitApp() {
+	SigKill = true
+	toPage("Exit")
 }

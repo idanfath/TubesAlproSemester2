@@ -1,9 +1,9 @@
-package mindflow
+package main
 
 import "fmt"
 
 // options
-func printOptions(options Options) {
+func printAndListenOptions(options Options) {
 	var longestLen = getOptionsLongestLength(options)
 	var optionsAmount int = len(options)
 	var i int
@@ -12,6 +12,7 @@ func printOptions(options Options) {
 		s = fmt.Sprintf("[%d] %-*s", i, longestLen, options[i].Name)
 		fmt.Println(center(s))
 	}
+	readOption(options)
 }
 func getOptionsLongestLength(options Options) int {
 	var max int = 0
@@ -23,4 +24,17 @@ func getOptionsLongestLength(options Options) int {
 		}
 	}
 	return max
+}
+func selectOption(options Options, index int) {
+	if index < 0 || index >= len(options) {
+		fmt.Println("Invalid option")
+		return
+	}
+	options[index].Action()
+}
+func readOption(options Options) {
+	var index int
+	fmt.Print(center("Select an option: "))
+	fmt.Scan(&index)
+	selectOption(options, index)
 }

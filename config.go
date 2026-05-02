@@ -1,13 +1,18 @@
-package mindflow
+package main
 
 type AppConfig struct {
-	Width int
+	Title     string
+	Width     int
+	TopMargin int
 }
 type Option struct {
-	Name string
+	Name   string
+	Action func()
 }
 type Options []Option
 
 var App = AppConfig{
-	Width: 150,
+	Title:     "My CLI App",
+	Width:     160,
+	TopMargin: 10,
 }

@@ -1,4 +1,4 @@
-package mindflow
+package main
 
 import "fmt"
 
