@@ -6,13 +6,7 @@ type Page struct {
 	noBack  bool
 }
 
-var fallback_notfound_page = Page{
-	name: "Not Found",
-	content: []RenderData{
-		{text: "Page Not Found"},
-	},
-	// todo: add option to go back to home page
-}
+var fallback_notfound_page Page
 var pages []Page
 
 func getPage(name string) Page {

@@ -28,6 +28,20 @@ func exit() {
 func initializeApp() {
 	App.currentPage = "Home"
 	App.history = []string{App.currentPage}
+	fallback_notfound_page = Page{
+		name: "Not Found",
+		content: []RenderData{
+			{text: "Page Not Found"},
+			{options: Options{
+				{
+					name: "Kembali ke Menu Utama",
+					action: func() {
+						toPage("Home")
+					},
+				},
+			}},
+		},
+	}
 	pages = []Page{
 		{
 			name:   "Home",

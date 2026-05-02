@@ -25,7 +25,7 @@ func render() {
 		outputRenderData(page.content[i])
 		if len(page.content[i].options) > 0 {
 			foundOptions = true
-			showOptions(page.content[i].options)
+			showOptions(buildOptions(page.content[i].options))
 		}
 	}
 	// render temporary content
