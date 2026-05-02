@@ -3,6 +3,7 @@ package main
 var SigKill bool = false
 
 func main() {
+	initPage()
 	for {
 		render()
 		if SigKill {

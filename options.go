@@ -2,7 +2,6 @@ package main
 
 import "fmt"
 
-// options
 func printAndListenOptions(options Options) {
 	var longestLen = getOptionsLongestLength(options)
 	var optionsAmount int = len(options)
@@ -27,7 +26,6 @@ func getOptionsLongestLength(options Options) int {
 }
 func selectOption(options Options, index int) {
 	if index < 0 || index >= len(options) {
-		fmt.Println("Invalid option")
 		return
 	}
 	options[index].Action()

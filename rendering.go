@@ -8,20 +8,19 @@ type RenderData struct {
 	table     Table
 	options   Options
 }
-
-var RenderQueue = []RenderData{}
-
 type Page struct {
 	Name    string
 	Content []RenderData
 }
 
+var RenderQueue = []RenderData{}
+
 var history []string
 var currentPage string
-
 var pages []Page
 
-func init() {
+// initialize variabel page, kalau di init langsung berpotensi initialization cycle
+func initPage() {
 	pages = []Page{
 		{
 			Name: "Home",
@@ -69,6 +68,7 @@ func init() {
 	RenderQueue = getPage(currentPage).Content
 }
 
+// navigation: mundur 1 page
 func back() {
 	if len(history) == 0 {
 		return
@@ -80,6 +80,7 @@ func back() {
 	RenderQueue = getPage(currentPage).Content
 }
 
+// navigation: ganti page
 func toPage(name string) {
 	if name == currentPage {
 		return
@@ -89,6 +90,7 @@ func toPage(name string) {
 	RenderQueue = getPage(currentPage).Content
 }
 
+// buat get page berdasarkan nama (string)
 func getPage(name string) Page {
 	for i := range pages {
 		if pages[i].Name == name {
@@ -101,6 +103,7 @@ func getPage(name string) Page {
 	}
 }
 
+// build options, biar dinamis kalau ada historynya otomatis ada option back
 func buildOptions(history []string, options Options) Options {
 	if len(history) > 0 {
 		return append(Options{
@@ -115,6 +118,7 @@ func buildOptions(history []string, options Options) Options {
 	return options
 }
 
+// fungsi render utama, clear layar dan render ulang konten
 func render() {
 	var i, j int
 	clearScreen()
@@ -150,6 +154,7 @@ func render() {
 	}
 }
 
+// rendering utility functions
 func clearScreen() {
 	fmt.Print("\033[H\033[2J")
 }
