@@ -32,8 +32,10 @@ func render() {
 	outputTempRenderQueue()
 	// handle no options
 	if !foundOptions && page.name != "Exit" {
-		if len(App.history) > 0 {
+		if len(App.history) > 0 && !getPage(App.currentPage).noBack {
 			showOptions(buildOptions(Options{}))
+		} else {
+			exit()
 		}
 	}
 	printBottomMargin()

@@ -25,9 +25,9 @@ func sortArrInt(arr []int) []int {
 
 // rands
 func randInt(min, max int) int {
-	return min + time.Now().Nanosecond()%(max-min)
+	return min + time.Now().Nanosecond()%(max-min+1)
 }
 func randDaily(min, max int) int {
 	var seed = time.Now().Day() + int(time.Now().Month()) + time.Now().Year()
-	return min + seed%(max-min)
+	return min + seed%(max-min+1)
 }

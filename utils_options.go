@@ -40,8 +40,7 @@ func runOption(options Options, index int) {
 
 func readOption(options Options) {
 	var index int
-	var prompt string = fmt.Sprintf("Select an option [0-%d]: ", len(options)-1)
-	fmt.Print(cen(prompt))
+	fmt.Print(cen("Select an option: "))
 	fmt.Scan(&index)
 	runOption(options, index)
 }
