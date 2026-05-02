@@ -1,22 +1,33 @@
 package main
 
-import "fmt"
+import "time"
 
-func centeredString(s string, w int) string {
-	return repeat(" ", (w-len(s))/2) + s
-}
-func center(s string) string {
-	return centeredString(s, App.Width)
-}
-
-func repeat(s string, count int) string {
-	var result string
-	var i int
-	for i = 0; i < count; i++ {
-		result += s
+func pow(base int, power int) int {
+	if power < 0 {
+		return 1
 	}
-	return result
+	return base * pow(base, power-1)
 }
-func toString(s any) string {
-	return fmt.Sprint(s)
+
+// bubble sort, gapapa yang penting ada, kalau boleh pakai import, ganti dengan lib
+func sortArrInt(arr []int) []int {
+	var i, j int
+	for i = 0; i < len(arr); i++ {
+		for j = 0; j < len(arr)-1; j++ {
+			if arr[j] > arr[j+1] {
+				// swap
+				arr[j], arr[j+1] = arr[j+1], arr[j]
+			}
+		}
+	}
+	return arr
+}
+
+// rands
+func randInt(min, max int) int {
+	return min + time.Now().Nanosecond()%(max-min)
+}
+func randDaily(min, max int) int {
+	var seed = time.Now().Day() + int(time.Now().Month()) + time.Now().Year()
+	return min + seed%(max-min)
 }

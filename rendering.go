@@ -5,160 +5,81 @@ import "fmt"
 type RenderData struct {
 	multiline []string
 	text      string
-	table     Table
+	table     string
+	breakline bool
+	dynamic   func() []string
 	options   Options
 }
-type Page struct {
-	Name    string
-	Content []RenderData
-}
 
-var RenderQueue = []RenderData{}
+var RenderQ = []RenderData{}
+var TempRenderQ = []RenderData{}
 
-var history []string
-var currentPage string
-var pages []Page
-
-// initialize variabel page, kalau di init langsung berpotensi initialization cycle
-func initPage() {
-	pages = []Page{
-		{
-			Name: "Home",
-			Content: []RenderData{
-				{text: "Home Page"},
-				{multiline: []string{"Welcome to the Home Page!", "This is a simple CLI application."}},
-				{table: Table{
-					Header: []string{"ID", "Name", "Age"},
-					Rows: [][]any{
-						{1, "Alice", 30},
-						{2, "Bob", 25},
-						{3, "Charlie", 35},
-					},
-				}},
-				{options: Options{
-					{
-						Name: "Go to About Page",
-						Action: func() {
-							toPage("About")
-						},
-					},
-					{
-						Name: "Exit",
-						Action: func() {
-							exitApp()
-						},
-					},
-				}},
-			},
-		},
-		{
-			Name: "About",
-			Content: []RenderData{
-				{text: "About Page"},
-			},
-		},
-		{
-			Name: "Exit",
-			Content: []RenderData{
-				{multiline: []string{"Exiting...", "Goodbye!"}},
-			},
-		},
-	}
-	currentPage = "Home"
-	RenderQueue = getPage(currentPage).Content
-}
-
-// navigation: mundur 1 page
-func back() {
-	if len(history) == 0 {
-		return
-	}
-	// page terakhir jadi page skrg
-	currentPage = history[len(history)-1]
-	// hapus page terakhir dari history
-	history = history[0 : len(history)-1]
-	RenderQueue = getPage(currentPage).Content
-}
-
-// navigation: ganti page
-func toPage(name string) {
-	if name == currentPage {
-		return
-	}
-	history = append(history, currentPage)
-	currentPage = name
-	RenderQueue = getPage(currentPage).Content
-}
-
-// buat get page berdasarkan nama (string)
-func getPage(name string) Page {
-	for i := range pages {
-		if pages[i].Name == name {
-			return pages[i]
-		}
-	}
-	return Page{
-		Name:    "Not Found",
-		Content: []RenderData{{text: "Page not found"}},
-	}
-}
-
-// build options, biar dinamis kalau ada historynya otomatis ada option back
-func buildOptions(history []string, options Options) Options {
-	if len(history) > 0 {
-		return append(Options{
-			{
-				Name: "Back",
-				Action: func() {
-					back()
-				},
-			},
-		}, options...)
-	}
-	return options
-}
-
-// fungsi render utama, clear layar dan render ulang konten
 func render() {
-	var i, j int
+	var i int
 	clearScreen()
 	printTopMargin()
+	var page = getPage(App.currentPage)
 	var foundOptions = false
-	var currentPage = getPage(currentPage)
-	var currentPageData = currentPage.Content
-	var currentPageName = currentPage.Name
-	for i = 0; i < len(currentPageData); i++ {
-		if len(currentPageData[i].multiline) > 0 {
-			for j = 0; j < len(currentPageData[i].multiline); j++ {
-				fmt.Println(center(currentPageData[i].multiline[j]))
-			}
-		}
-		if currentPageData[i].text != "" {
-			fmt.Println(center(currentPageData[i].text))
-		}
-		if len(currentPageData[i].table.Header) > 0 {
-			printTable(currentPageData[i].table)
-		}
-		if len(currentPageData[i].options) > 0 {
+	// render page content
+	for i = 0; i < len(page.content); i++ {
+		outputRenderData(page.content[i])
+		if len(page.content[i].options) > 0 {
 			foundOptions = true
-			printAndListenOptions(buildOptions(history, currentPageData[i].options))
+			showOptions(page.content[i].options)
 		}
 	}
-	if !foundOptions && currentPageName != "Exit" {
-		if len(history) > 0 {
-			printAndListenOptions(buildOptions(history, Options{}))
-		} else {
-			RenderQueue = []RenderData{{text: "Exit reason: No options found"}}
-			exitApp()
+	// render temporary content
+	outputTempRenderQueue()
+	// handle no options
+	if !foundOptions && page.name != "Exit" {
+		if len(App.history) > 0 {
+			showOptions(buildOptions(Options{}))
 		}
 	}
+	printBottomMargin()
 }
 
-// rendering utility functions
+// --
+
 func clearScreen() {
 	fmt.Print("\033[H\033[2J")
 }
-
 func printTopMargin() {
-	fmt.Println(repeat("\n", App.TopMargin))
+	fmt.Println(repeat("\n", App.topMargin))
+}
+func printBottomMargin() {
+	fmt.Println(repeat("\n", App.bottomMargin))
+}
+func printMultiline(multiline []string) {
+	var i int
+	if len(multiline) > 0 {
+		for i = 0; i < len(multiline); i++ {
+			fmt.Println(cen(multiline[i]))
+		}
+	}
+}
+
+func outputRenderData(data RenderData) {
+	if data.breakline {
+		fmt.Println("")
+	}
+	if data.dynamic != nil {
+		printMultiline(data.dynamic())
+	}
+	if data.text != "" {
+		fmt.Println(cen(data.text))
+	}
+	if len(data.multiline) > 0 {
+		printMultiline(data.multiline)
+	}
+	if data.table != "" {
+		printT(getT(data.table))
+	}
+}
+func outputTempRenderQueue() {
+	var i int
+	for i = 0; i < len(TempRenderQ); i++ {
+		outputRenderData(TempRenderQ[i])
+	}
+	TempRenderQ = []RenderData{}
 }
