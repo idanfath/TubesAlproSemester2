@@ -57,6 +57,12 @@ func initializeApp() {
 				{breakline: true},
 				{options: Options{
 					{
+						name: "Manajemen Catatan Mood",
+						action: func() {
+							toPage("MenuMood")
+						},
+					},
+					{
 						name: "Motivasi Lainnya",
 						action: func() {
 							toPage("Motivation")
@@ -81,6 +87,19 @@ func initializeApp() {
 					return []string{getRandomMotivation().quote, "- " + getRandomMotivation().author}
 				}},
 				{breakline: true},
+			},
+		},
+		{
+			name: "MenuMood",
+			content: []RenderData{
+				{text: "MENU CATATAN MOOD"},
+				{breakline: true},
+				{options: Options{
+					{name: "Tambah Catatan Mood", action: func() { tambahMood() }},
+					{name: "Tampil Semua Mood", action: func() { tampilMood() }},
+					{name: "Ubah Catatan Mood", action: func() { ubahMood() }},
+					{name: "Hapus Catatan Mood", action: func() { hapusMood() }},
+				}},
 			},
 		},
 		{
