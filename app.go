@@ -57,6 +57,18 @@ func initializeApp() {
 				{breakline: true},
 				{options: Options{
 					{
+						name: "Manajemen Catatan Mood",
+						action: func() {
+							toPage("MenuMood")
+						},
+					},
+					{
+						name: "Manajemen Daftar Tugas",
+						action: func() {
+							toPage("MenuTask")
+						},
+					},
+					{
 						name: "Motivasi Lainnya",
 						action: func() {
 							toPage("Motivation")
@@ -84,6 +96,32 @@ func initializeApp() {
 			},
 		},
 		{
+			name: "MenuMood",
+			content: []RenderData{
+				{text: "MENU CATATAN MOOD"},
+				{breakline: true},
+				{options: Options{
+					{name: "Tambah Catatan Mood", action: func() { tambahMood() }},
+					{name: "Tampil Semua Mood", action: func() { tampilMood() }},
+					{name: "Ubah Catatan Mood", action: func() { ubahMood() }},
+					{name: "Hapus Catatan Mood", action: func() { hapusMood() }},
+				}},
+			},
+		},
+		{
+			name: "MenuTask",
+			content: []RenderData{
+				{text: "MENU DAFTAR TUGAS"},
+				{breakline: true},
+				{options: Options{
+					{name: "Tambah Tugas", action: func() { tambahtask() }},
+					{name: "Tampil Semua Tugas", action: func() { tampilTask() }},
+					{name: "Ubah Tugas", action: func() { ubahtask() }},
+					{name: "Hapus Tugas", action: func() { hapustask() }},
+				}},
+			},
+		},
+		{
 			name:   "Exit",
 			noBack: true,
 			content: []RenderData{
@@ -91,15 +129,5 @@ func initializeApp() {
 			},
 		},
 	}
-	tables = []Table{
-		{
-			name:   "Food",
-			header: []string{"ID", "Name", "Favorite Food"},
-			rows: [][]any{
-				{1, "Alice", "Pizza"},
-				{2, "Bob", "Sushi"},
-				{3, "Charlie", "Burger"},
-			},
-		},
-	}
+	tables = []Table{}
 }
