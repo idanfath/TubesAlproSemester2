@@ -1,2 +1,3 @@
-TODO:
-fix Input Handling, fmt.Scan nya gaada error handling.
+sortir berdasarkan tabel berdasarkan preferensi
+pagination
+search

@@ -3,9 +3,11 @@ package main
 import "fmt"
 
 type Table struct {
-	name   string
-	header []string
-	rows   [][]any
+	name             string
+	header           []string
+	rows             [][]any
+	col_max_length   []int
+	unique_col_index []int
 }
 type TableIndex struct {
 	rowIndex int
@@ -54,7 +56,8 @@ func tableContentRows(table Table, rowAmount int, colLengths []int) {
 	if len(table.header) == 0 {
 		return
 	}
-	// setidaknya print 1 row kosong, selama headernya ada, biar keliatan bentuk tabelnya
+
+	// FALLBACK: setidaknya print 1 row kosong, selama headernya ada, biar keliatan bentuk tabelnya
 	if rowAmount == 0 {
 		rowAmount = 1
 		var x []any
@@ -63,15 +66,47 @@ func tableContentRows(table Table, rowAmount int, colLengths []int) {
 		}
 		table.rows = [][]any{x}
 	}
-	// print baris per baris
+
+	// LOGIC UTAMA print baris per baris
 	for i = 0; i < rowAmount; i++ {
 		// build stringnya dari kolom kiri ke kanan
 		s = "|"
 		for j = 0; j < len(colLengths); j++ {
 			// -1 karna kasih spasi di awal
-			s += fmt.Sprintf(" %-*s", colLengths[j]-1, toString(table.rows[i][j]))
+			// TODO: tanya bapaknya boleh pake * dinamis ga
+			s += fmt.Sprintf(" %-*s", colLengths[j]-1, truncate(toString(table.rows[i][j]), colLengths[j]-1))
 			s += "|"
 		}
 		fmt.Println(cen(s))
 	}
+}
+
+func colLengths(table Table) []int {
+	var colAmount int = len(table.header)
+	var rowAmount int = len(table.rows)
+	var columnsLength []int
+	var currLength int
+	var col, row int
+	// iterasi tiap column
+	for col = 0; col < colAmount; col++ {
+		columnsLength = append(columnsLength, len(toString(table.header[col]))) // mulai dari panjang header
+		// iterasi tiap row di column untuk cari string terpanjang di columnya
+		for row = 0; row < rowAmount; row++ {
+			currLength = len(truncate(toString(table.rows[row][col]), table.col_max_length[col])) // panjang string di cell ini
+			if currLength > columnsLength[col] {
+				columnsLength[col] = currLength
+			}
+		}
+		// exit iterasi row di column ini (max udah ketemu)
+
+		// space tambahan
+		columnsLength[col] = columnsLength[col] + 2
+		// karna header akan di-center, harus fix paritas
+		// kalu header genap, spacenya harus genap juga biar perfect center, begitu juga sebaliknya
+		// basically paritasnya harus sama, kalo beda, tambahin 1 spasi lagi biar sama
+		if len(table.header[col])%2 != columnsLength[col]%2 {
+			columnsLength[col] = columnsLength[col] + 1
+		}
+	}
+	return columnsLength
 }
