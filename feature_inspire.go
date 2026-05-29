@@ -1,6 +1,7 @@
 package main
 
 type Motivation struct {
+	id     int
 	quote  string
 	author string
 }
@@ -8,6 +9,7 @@ type Motivations []Motivation
 
 var motivations = []Motivation{
 	{
+		id: 1,
 		quote: `Being resentful about your problems won’t solve them. What will solve them is focused action.
 You may be well justified in your resentment. Yet all the justification in the world won’t make the problems go away.
 The thing that will make them go away is your effort. And that effort is much more effective when you move resentment, blame, disappointment and anxiety out of the way.
@@ -17,6 +19,7 @@ Your problems are yours to solve and doing so will improve life. Eagerly seize t
 		author: "Ralph Marston",
 	},
 	{
+		id: 2,
 		quote: `Relish every experience. Put value into every moment.
 Think, act, and feel as if it all matters, because it does. Appreciate the immense historical, cultural and ontological context within which you live.
 See the beauty in every detail. Notice the mysterious way it resonates deep within you.

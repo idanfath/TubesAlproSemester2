@@ -22,17 +22,17 @@ func render() {
 	var foundOptions = false
 	// render page content
 	for i = 0; i < len(page.content); i++ {
-		outputRenderData(page.content[i])
+		handleRenderData(page.content[i])
 		if len(page.content[i].options) > 0 {
 			foundOptions = true
+			outputTempRenderQueue()
 			showOptions(buildOptions(page.content[i].options))
 		}
 	}
-	// render temporary content
-	outputTempRenderQueue()
 	// handle no options
 	if !foundOptions && page.name != "Exit" {
 		if len(App.history) > 0 && !getPage(App.currentPage).noBack {
+			outputTempRenderQueue()
 			showOptions(buildOptions(Options{}))
 		} else {
 			exit()
@@ -61,7 +61,7 @@ func printMultiline(multiline []string) {
 	}
 }
 
-func outputRenderData(data RenderData) {
+func handleRenderData(data RenderData) {
 	if data.breakline {
 		fmt.Println("")
 	}
@@ -80,8 +80,11 @@ func outputRenderData(data RenderData) {
 }
 func outputTempRenderQueue() {
 	var i int
-	for i = 0; i < len(TempRenderQ); i++ {
-		outputRenderData(TempRenderQ[i])
+	if len(TempRenderQ) > 0 {
+		for i = 0; i < len(TempRenderQ); i++ {
+			handleRenderData(TempRenderQ[i])
+		}
+		fmt.Println("")
+		TempRenderQ = []RenderData{}
 	}
-	TempRenderQ = []RenderData{}
 }

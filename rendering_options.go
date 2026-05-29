@@ -34,6 +34,7 @@ func showOptions(options Options) {
 	var strLen = longestOptionName(options)
 	var i int
 	var s string
+	fmt.Println("")
 	for i = 0; i < len(options); i++ {
 		s = fmt.Sprintf("[%d] %-*s", i, strLen, options[i].name)
 		fmt.Println(cen(s))

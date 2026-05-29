@@ -53,3 +53,20 @@ func lower(s string) string {
 	}
 	return result
 }
+func truncate(s string, maxLength int) string {
+	// ("tes", 0) -> ""
+	if maxLength <= 0 {
+		return ""
+	}
+	// ("tes", 5) -> "tes"
+	if len(s) <= maxLength {
+		return s
+	}
+	// ("testing", 3) -> "tes"
+	// kalau bisa jgn masukin kurang dari 3 dah maxLengthnya
+	if maxLength <= 3 {
+		return s[:maxLength]
+	}
+	// ("testing", 5) -> "te..."
+	return s[:maxLength-3] + "..."
+}
