@@ -5,7 +5,7 @@ import "fmt"
 type RenderData struct {
 	multiline []string
 	text      string
-	table     string
+	table     func() Table // biar dinamis, tiap render build ulang tabel
 	breakline bool
 	dynamic   func() []string
 	options   Options
@@ -74,17 +74,32 @@ func handleRenderData(data RenderData) {
 	if len(data.multiline) > 0 {
 		printMultiline(data.multiline)
 	}
-	if data.table != "" {
-		printT(getT(data.table))
+	// harus != nil, karna default value fungsi itu nil
+	if data.table != nil {
+		printTable(data.table())
 	}
 }
+
 func outputTempRenderQueue() {
 	var i int
 	if len(TempRenderQ) > 0 {
+		fmt.Println("")
 		for i = 0; i < len(TempRenderQ); i++ {
 			handleRenderData(TempRenderQ[i])
 		}
-		fmt.Println("")
 		TempRenderQ = []RenderData{}
 	}
+}
+
+// simple validation helper, result = false -> render message, result = true -> lanjut
+func v(result bool, message string) bool {
+	if !result {
+		TempRenderQ = []RenderData{{text: message}}
+	}
+	return result
+}
+
+// reusable buat munculi text di next render cycle temporarily
+func alert(s string) {
+	TempRenderQ = []RenderData{{text: s}}
 }

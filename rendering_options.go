@@ -20,7 +20,7 @@ func input(input Input) {
 	var s string
 	fmt.Print(cen(input.Prompt))
 	fmt.Scanln(&s)
-	input.onSubmit(s)
+	input.onSubmit(replace(s, "_", " "))
 }
 
 func inputNumber(input InputNumber) {
