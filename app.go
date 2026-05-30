@@ -77,6 +77,12 @@ func initializeApp() {
 						},
 					},
 					{
+						name: "Manajemen Daftar Tugas",
+						action: func() {
+							toPage("MenuTask")
+						},
+					},
+					{
 						name: "Motivasi Lainnya",
 						action: func() {
 							toPage("Motivation")
@@ -284,6 +290,19 @@ func initializeApp() {
 			noBack: true,
 			content: []RenderData{
 				{text: "Exitting app.."},
+			},
+		},
+		{
+			name: "MenuTask",
+			content: []RenderData{
+				{text: "MENU DAFTAR TUGAS"},
+				{breakline: true},
+				{options: Options{
+					{name: "Tambah Tugas", action: func() { tambahtask() }},
+					{name: "Tampil Semua Tugas", action: func() { tampilTask() }},
+					{name: "Ubah Tugas", action: func() { ubahtask() }},
+					{name: "Hapus Tugas", action: func() { hapustask() }},
+				}},
 			},
 		},
 	}
