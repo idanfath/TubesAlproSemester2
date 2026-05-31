@@ -20,7 +20,7 @@ func input(input Input) {
 	var s string
 	fmt.Print(cen(input.Prompt))
 	fmt.Scanln(&s)
-	input.onSubmit(s)
+	input.onSubmit(replace(s, "_", " "))
 }
 
 func inputNumber(input InputNumber) {
@@ -34,6 +34,7 @@ func showOptions(options Options) {
 	var strLen = longestOptionName(options)
 	var i int
 	var s string
+	fmt.Println("")
 	for i = 0; i < len(options); i++ {
 		s = fmt.Sprintf("[%d] %-*s", i, strLen, options[i].name)
 		fmt.Println(cen(s))

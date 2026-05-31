@@ -23,6 +23,9 @@ func toPage(name string) {
 	if name == App.currentPage {
 		return
 	}
+	if App.currentPage == "TaskView" || App.currentPage == "MoodView" {
+		Temp.id = -1
+	}
 	App.history = newHistory(name)
 	App.currentPage = name
 	RenderQ = getPage(App.currentPage).content

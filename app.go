@@ -1,3 +1,5 @@
+// disini simpan konfigurasi, data awal aplikasi, dll
+
 package main
 
 type AppConfig struct {
@@ -6,7 +8,18 @@ type AppConfig struct {
 	topMargin    int
 	bottomMargin int
 	history      []string
+	pageParam    []any
 	currentPage  string
+}
+
+type TempData struct {
+	lastMotivationID any
+	id               int
+}
+
+var Temp = TempData{
+	lastMotivationID: -1,
+	id:               -1,
 }
 
 var App = AppConfig{
@@ -51,15 +64,21 @@ func initializeApp() {
 				{text: "Selamat datang di Mindflow!"},
 				{breakline: true},
 				{text: "Daily Motivation"},
-				{dynamic: func() []string {
-					return []string{getDailyMotivation().quote, "- " + getDailyMotivation().author}
-				}},
-				{breakline: true},
+				{dynamic: appDynamicGetRandomMotivation},
 				{options: Options{
 					{
 						name: "Pencarian",
 						action: func() {
 							toPage("MenuPencarian")
+						name: "Menu Pencatatan Mood",
+						action: func() {
+							toPage("Mood")
+						},
+					},
+					{
+						name: "Menu Daftar Tugas",
+						action: func() {
+							toPage("Task")
 						},
 					},
 					{
@@ -83,10 +102,44 @@ func initializeApp() {
 				{text: "Motivasi Acak ✨"},
 				{text: "Dapatkan motivasi baru dengan memilih opsi di bawah!"},
 				{breakline: true},
-				{dynamic: func() []string {
-					return []string{getRandomMotivation().quote, "- " + getRandomMotivation().author}
+				{dynamic: appDynamicGetRandomMotivation},
+				{options: Options{
+					{
+						name: "Dapatkan Motivasi Baru",
+						action: func() {
+							toPage("Motivation")
+						},
+					},
 				}},
+			},
+		},
+		{
+			name: "Mood",
+			content: []RenderData{
+				{text: "Menu Mood"},
+				{text: "Kelola catatan mood harianmu dengan mudah!"},
 				{breakline: true},
+				{table: MoodTable},
+				{
+					options: Options{
+						{name: "Lihat Detail Catatan Mood", action: appOptionMoodView},
+						{name: "Tambah Catatan Mood", action: appOptionMoodInsert},
+						{name: "Ubah Catatan Mood", action: appOptionMoodUpdate},
+						{name: "Hapus Catatan Mood", action: appOptionMoodDelete},
+					},
+				},
+			},
+		},
+		{
+			name: "MoodView",
+			content: []RenderData{
+				{text: "Detail Catatan Mood"},
+				{breakline: true},
+				{dynamic: appDynamicMoodView},
+				{options: Options{
+					{name: "Ubah Catatan Mood", action: appOptionMoodUpdate},
+					{name: "Hapus Catatan Mood", action: appOptionMoodDelete},
+				}},
 			},
 		},
 		{
@@ -114,18 +167,34 @@ func initializeApp() {
 			name:   "Exit",
 			noBack: true,
 			content: []RenderData{
-				{text: "BABABABABABAYYY!!!! see you kapan kapan!"},
+				{text: "Exitting app.."},
 			},
 		},
-	}
-	tables = []Table{
 		{
-			name:   "Food",
-			header: []string{"ID", "Name", "Favorite Food"},
-			rows: [][]any{
-				{1, "Alice", "Pizza"},
-				{2, "Bob", "Sushi"},
-				{3, "Charlie", "Burger"},
+			name: "Task",
+			content: []RenderData{
+				{text: "Menu Daftar Tugas"},
+				{breakline: true},
+				{table: TaskTable},
+				{options: Options{
+					{name: "Lihat Detail Tugas", action: appOptionTaskView},
+					{name: "Tambah Tugas", action: appOptionTaskInsert},
+					{name: "Ubah Tugas", action: appOptionTaskUpdate},
+					{name: "Hapus Tugas", action: appOptionTaskDelete},
+				}},
+			},
+		},
+		{
+			name: "TaskView",
+			content: []RenderData{
+				{text: "Detail Tugas"},
+				{breakline: true},
+				{dynamic: appDynamicTaskView},
+				{options: Options{
+					{name: "Tandai Selesai/Belum Selesai", action: appOptionToggleTaskStatus},
+					{name: "Ubah Detail Tugas", action: appOptionTaskUpdate},
+					{name: "Hapus Tugas", action: appOptionTaskDelete},
+				}},
 			},
 		},
 	}
