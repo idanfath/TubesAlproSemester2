@@ -5,7 +5,7 @@ import "fmt"
 type RenderData struct {
 	multiline []string
 	text      string
-	table     string
+	table     func() Table // biar dinamis, tiap render build ulang tabel
 	breakline bool
 	dynamic   func() []string
 	options   Options
@@ -22,17 +22,17 @@ func render() {
 	var foundOptions = false
 	// render page content
 	for i = 0; i < len(page.content); i++ {
-		outputRenderData(page.content[i])
+		handleRenderData(page.content[i])
 		if len(page.content[i].options) > 0 {
 			foundOptions = true
+			outputTempRenderQueue()
 			showOptions(buildOptions(page.content[i].options))
 		}
 	}
-	// render temporary content
-	outputTempRenderQueue()
 	// handle no options
 	if !foundOptions && page.name != "Exit" {
 		if len(App.history) > 0 && !getPage(App.currentPage).noBack {
+			outputTempRenderQueue()
 			showOptions(buildOptions(Options{}))
 		} else {
 			exit()
@@ -61,7 +61,7 @@ func printMultiline(multiline []string) {
 	}
 }
 
-func outputRenderData(data RenderData) {
+func handleRenderData(data RenderData) {
 	if data.breakline {
 		fmt.Println("")
 	}
@@ -74,14 +74,32 @@ func outputRenderData(data RenderData) {
 	if len(data.multiline) > 0 {
 		printMultiline(data.multiline)
 	}
-	if data.table != "" {
-		printT(getT(data.table))
+	// harus != nil, karna default value fungsi itu nil
+	if data.table != nil {
+		printTable(data.table())
 	}
 }
+
 func outputTempRenderQueue() {
 	var i int
-	for i = 0; i < len(TempRenderQ); i++ {
-		outputRenderData(TempRenderQ[i])
+	if len(TempRenderQ) > 0 {
+		fmt.Println("")
+		for i = 0; i < len(TempRenderQ); i++ {
+			handleRenderData(TempRenderQ[i])
+		}
+		TempRenderQ = []RenderData{}
 	}
-	TempRenderQ = []RenderData{}
+}
+
+// simple validation helper, result = false -> render message, result = true -> lanjut
+func v(result bool, message string) bool {
+	if !result {
+		TempRenderQ = []RenderData{{text: message}}
+	}
+	return result
+}
+
+// reusable buat munculi text di next render cycle temporarily
+func alert(s string) {
+	TempRenderQ = []RenderData{{text: s}}
 }

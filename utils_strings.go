@@ -53,3 +53,95 @@ func lower(s string) string {
 	}
 	return result
 }
+func upper(s string) string {
+	var result string
+	var temp byte
+	var i int
+	// rebuild string, tapi kalo ketemu huruf kecil ubah ke huruf kapital
+	for i = 0; i < len(s); i++ {
+		temp = s[i]
+		if temp >= 'a' && temp <= 'z' {
+			result += string(temp - 32)
+			continue
+		}
+		result += string(temp)
+	}
+	return result
+}
+func truncate(s string, maxLength int) string {
+	// ("tes", 0) -> ""
+	if maxLength == 0 {
+		return ""
+	}
+	// ("tes", -1) -> "tes"
+	if maxLength < 0 {
+		return s
+	}
+	// ("tes", 5) -> "tes"
+	if len(s) <= maxLength {
+		return s
+	}
+	// ("testing", 3) -> "tes"
+	// kalau bisa jgn masukin kurang dari 3 dah maxLengthnya
+	if maxLength <= 3 {
+		return s[:maxLength]
+	}
+	// ("testing", 5) -> "te..."
+	return s[:maxLength-3] + "..."
+}
+
+func toInt(s string) int {
+	var result int
+	var i int
+	if len(s) == 0 {
+		return 0
+	}
+
+	// kalo ada tanda minus, tandai, dan hapus tandanya dulu
+	var isNegative bool
+	if s[0] == '-' {
+		isNegative = true
+		s = s[1:]
+	}
+
+	for i = 0; i < len(s); i++ {
+		if s[i] < '0' || s[i] > '9' {
+			return 0
+		}
+		// dikurangi '0' karna 48, msial '3' - '0' = 51 - 48 = 3
+		result = result*10 + int(s[i]-'0')
+	}
+
+	if isNegative {
+		result = -result
+	}
+	return result
+}
+
+// iterasi tiap char string, kalo ada yang bukan angka, return false, kalo expectNegative true, boleh ada 1 minus di awal
+func isNumStr(s string, expectNegative bool) bool {
+	if len(s) == 0 {
+		return false
+	}
+	var i int
+	if expectNegative && s[0] == '-' {
+		if len(s) == 1 {
+			return false
+		}
+		s = s[1:]
+	}
+	for i = 0; i < len(s); i++ {
+		if s[i] < '0' || s[i] > '9' {
+			return false
+		}
+	}
+	return true
+}
+
+// simple string switch, basically ? : (ini golang knp gapunya fitur gini dah)
+func stringswitch(condition bool, trueVal string, falseVal string) string {
+	if condition {
+		return trueVal
+	}
+	return falseVal
+}
