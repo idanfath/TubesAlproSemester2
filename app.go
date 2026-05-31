@@ -57,6 +57,12 @@ func initializeApp() {
 				{breakline: true},
 				{options: Options{
 					{
+						name: "Pencarian",
+						action: func() {
+							toPage("MenuPencarian")
+						},
+					},
+					{
 						name: "Motivasi Lainnya",
 						action: func() {
 							toPage("Motivation")
@@ -81,6 +87,27 @@ func initializeApp() {
 					return []string{getRandomMotivation().quote, "- " + getRandomMotivation().author}
 				}},
 				{breakline: true},
+			},
+		},
+		{
+			name: "MenuPencarian",
+			content: []RenderData{
+				{text: "MENU PENCARIAN"},
+				{breakline: true},
+				{options: Options{
+					{
+						name: "Cari Catatan Mood (Sequential Search)",
+						action: func() {
+							carimood()
+						},
+					},
+					{
+						name: "Cari Tugas (Binary Search)",
+						action: func() {
+							caritask()
+						},
+					},
+				}},
 			},
 		},
 		{
