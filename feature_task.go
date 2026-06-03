@@ -55,7 +55,7 @@ func buildTaskTable(tasks []Task) Table {
 			tasks[i].title,
 			getLabelPriorityTask(tasks[i].priority),
 			minuteToTime(tasks[i].duration),
-			stringswitch(tasks[i].isCompleted, "Selesai", "Belum Selesai"),
+			ifs(tasks[i].isCompleted, "Selesai", "Belum Selesai"),
 		})
 	}
 	return table
@@ -101,7 +101,7 @@ func seqSearchTask(keyword string) []Task {
 	var result []Task
 	var i int
 	for i = 0; i < len(tasks); i++ {
-		if contains(lower(tasks[i].title), lower(keyword)) || contains(lower(getLabelPriorityTask(tasks[i].priority)), lower(keyword)) || contains(lower(minuteToTime(tasks[i].duration)), lower(keyword)) || contains(lower(stringswitch(tasks[i].isCompleted, "Selesai", "Belum Selesai")), lower(keyword)) {
+		if contains(lower(tasks[i].title), lower(keyword)) || contains(lower(getLabelPriorityTask(tasks[i].priority)), lower(keyword)) || contains(lower(minuteToTime(tasks[i].duration)), lower(keyword)) || contains(lower(ifs(tasks[i].isCompleted, "Selesai", "Belum Selesai")), lower(keyword)) {
 			result = append(result, tasks[i])
 		}
 	}
@@ -113,7 +113,7 @@ func seqSearchTask(keyword string) []Task {
 func appOptionTaskSearch() {
 	var keyword string
 	input(Input{
-		Prompt: "Masukkan pencarian: ",
+		prompt: "Masukkan pencarian: ",
 		onSubmit: func(input string) {
 			keyword = lower(input)
 		},
@@ -134,7 +134,7 @@ func appOptionTaskSearch() {
 func appOptionTaskView() {
 	var id int
 	inputNumber(InputNumber{
-		Prompt: "Masukkan ID catatan tugas yang ingin dilihat: ",
+		prompt: "Masukkan ID catatan tugas yang ingin dilihat: ",
 		onSubmit: func(input float64) {
 			id = int(input)
 		},
@@ -149,7 +149,7 @@ func appOptionTaskView() {
 func appOptionTaskInsert() {
 	var task Task
 	input(Input{
-		Prompt: "Judul tugas: ",
+		prompt: "Judul tugas: ",
 		onSubmit: func(input string) {
 			task.title = input
 		},
@@ -158,9 +158,9 @@ func appOptionTaskInsert() {
 		return
 	}
 
-	printTable(TablePriorityTask())
+	printTable(TablePriorityTask(), true)
 	inputNumber(InputNumber{
-		Prompt: "Prioritas tugas (1-3): ",
+		prompt: "Prioritas tugas (1-3): ",
 		onSubmit: func(input float64) {
 			task.priority = int(input)
 		},
@@ -170,7 +170,7 @@ func appOptionTaskInsert() {
 	}
 
 	inputNumber(InputNumber{
-		Prompt: "Durasi tugas (menit): ",
+		prompt: "Durasi tugas (menit): ",
 		onSubmit: func(input float64) {
 			task.duration = int(input)
 		},
@@ -180,7 +180,7 @@ func appOptionTaskInsert() {
 	}
 
 	input(Input{
-		Prompt: "Tandai tugas sebagai selesai? (y/n): (n) ",
+		prompt: "Tandai tugas sebagai selesai? (y/n): (n) ",
 		onSubmit: func(input string) {
 			if input == "y" || input == "Y" {
 				task.isCompleted = true
@@ -199,7 +199,7 @@ func appOptionTaskUpdate() {
 		id = Temp.id
 	} else {
 		inputNumber(InputNumber{
-			Prompt: "Masukkan ID catatan tugas yang ingin diubah: ",
+			prompt: "Masukkan ID catatan tugas yang ingin diubah: ",
 			onSubmit: func(input float64) {
 				id = int(input)
 			},
@@ -213,7 +213,7 @@ func appOptionTaskUpdate() {
 	var task = tasks[idx]
 
 	input(Input{
-		Prompt: "Judul tugas: (" + task.title + ") ",
+		prompt: "Judul tugas: (" + task.title + ") ",
 		onSubmit: func(input string) {
 			task.title = input
 		},
@@ -222,9 +222,9 @@ func appOptionTaskUpdate() {
 		task.title = tasks[idx].title
 	}
 
-	printTable(TablePriorityTask())
+	printTable(TablePriorityTask(), true)
 	input(Input{
-		Prompt: "Prioritas tugas baru (1-3): (" + getLabelPriorityTask(task.priority) + ") ",
+		prompt: "Prioritas tugas baru (1-3): (" + getLabelPriorityTask(task.priority) + ") ",
 		onSubmit: func(input string) {
 			if input == "" {
 				task.priority = tasks[idx].priority
@@ -239,7 +239,7 @@ func appOptionTaskUpdate() {
 	}
 
 	input(Input{
-		Prompt: "Durasi tugas baru (menit): (" + toString(task.duration) + ") ",
+		prompt: "Durasi tugas baru (menit): (" + toString(task.duration) + ") ",
 		onSubmit: func(input string) {
 			temp = input
 
@@ -258,7 +258,7 @@ func appOptionTaskUpdate() {
 	}
 
 	input(Input{
-		Prompt: "Tandai tugas sebagai selesai? (y/n): (" + stringswitch(task.isCompleted, "y", "n") + ") ",
+		prompt: "Tandai tugas sebagai selesai? (y/n): (" + ifs(task.isCompleted, "y", "n") + ") ",
 		onSubmit: func(input string) {
 			if lower(input) == "y" {
 				task.isCompleted = true
@@ -280,7 +280,7 @@ func appOptionTaskDelete() {
 		id = Temp.id
 	} else {
 		inputNumber(InputNumber{
-			Prompt: "Masukkan ID catatan tugas yang ingin dihapus: ",
+			prompt: "Masukkan ID catatan tugas yang ingin dihapus: ",
 			onSubmit: func(input float64) {
 				id = int(input)
 			},
@@ -300,7 +300,7 @@ func appOptionToggleTaskStatus() {
 	var id int
 	if App.currentPage != "TaskView" || Temp.id == -1 {
 		inputNumber(InputNumber{
-			Prompt: "Masukkan ID catatan tugas yang ingin diubah statusnya: ",
+			prompt: "Masukkan ID catatan tugas yang ingin diubah statusnya: ",
 			onSubmit: func(input float64) {
 				id = int(input)
 			},
@@ -325,7 +325,7 @@ func appDynamicTaskView() []string {
 	}
 	var task = tasks[index]
 	return []string{
-		fmt.Sprintf("%d | Prioritas %s | Estimasi %s | %s", task.id, getLabelPriorityTask(task.priority), minuteToTime(task.duration), stringswitch(task.isCompleted, "Selesai", "Belum Selesai")),
+		fmt.Sprintf("%d | Prioritas %s | Estimasi %s | %s", task.id, getLabelPriorityTask(task.priority), minuteToTime(task.duration), ifs(task.isCompleted, "Selesai", "Belum Selesai")),
 		task.title,
 	}
 }

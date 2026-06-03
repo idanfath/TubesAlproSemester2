@@ -1,9 +1,11 @@
 package main
 
 type Page struct {
-	name    string
-	content []RenderData
-	noBack  bool
+	name      string
+	content   []RenderData
+	hasTable  bool
+	dataCount func() int
+	noBack    bool
 }
 
 var fallback_notfound_page Page
@@ -19,15 +21,18 @@ func getPage(name string) Page {
 	return fallback_notfound_page
 }
 
-func toPage(name string) {
-	if name == App.currentPage {
+func toPage(target string) {
+	if target == App.currentPage {
 		return
 	}
 	if App.currentPage == "TaskView" || App.currentPage == "MoodView" {
 		Temp.id = -1
 	}
-	App.history = newHistory(name)
-	App.currentPage = name
+	if getPage(target).hasTable {
+		Temp.table_page = 1
+	}
+	App.history = newHistory(target)
+	App.currentPage = target
 	RenderQ = getPage(App.currentPage).content
 }
 

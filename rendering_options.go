@@ -8,24 +8,24 @@ type Option struct {
 }
 type Options []Option
 type Input struct {
-	Prompt   string
+	prompt   string
 	onSubmit func(string)
 }
 type InputNumber struct {
-	Prompt   string
+	prompt   string
 	onSubmit func(float64)
 }
 
 func input(input Input) {
 	var s string
-	fmt.Print(cen(input.Prompt))
+	fmt.Print(cen(input.prompt))
 	fmt.Scanln(&s)
 	input.onSubmit(replace(s, "_", " "))
 }
 
 func inputNumber(input InputNumber) {
 	var f float64
-	fmt.Print(cen(input.Prompt))
+	fmt.Print(cen(input.prompt))
 	fmt.Scanln(&f)
 	input.onSubmit(f)
 }

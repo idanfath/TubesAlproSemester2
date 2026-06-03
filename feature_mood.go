@@ -175,9 +175,9 @@ func appOptionMoodSearch() {
 		rows:       [][]string{{"Deskripsi & Tanggal", "Skor Mood"}},
 		maxLengths: []int{30, 30},
 	}
-	printTable(searchOptionsTable)
+	printTable(searchOptionsTable, true)
 	inputNumber(InputNumber{
-		Prompt: "Masukkan tipe pencarian (1-2): ",
+		prompt: "Masukkan tipe pencarian (1-2): ",
 		onSubmit: func(input float64) {
 			option = int(input)
 		},
@@ -186,7 +186,7 @@ func appOptionMoodSearch() {
 	case 1:
 		var keyword string
 		input(Input{
-			Prompt: "Masukkan pencarian: ",
+			prompt: "Masukkan pencarian: ",
 			onSubmit: func(input string) {
 				keyword = input
 			},
@@ -195,7 +195,7 @@ func appOptionMoodSearch() {
 	case 2:
 		var keyscore int
 		inputNumber(InputNumber{
-			Prompt: "Masukkan pencarian: ",
+			prompt: "Masukkan pencarian: ",
 			onSubmit: func(input float64) {
 				keyscore = int(input)
 			},
@@ -216,7 +216,7 @@ func appOptionMoodSearch() {
 func appOptionMoodView() {
 	var id int
 	inputNumber(InputNumber{
-		Prompt: "Masukkan ID catatan mood yang ingin dilihat: ",
+		prompt: "Masukkan ID catatan mood yang ingin dilihat: ",
 		onSubmit: func(input float64) {
 			id = int(input)
 		},
@@ -232,7 +232,7 @@ func appOptionMoodInsert() {
 	var mood Mood
 
 	input(Input{
-		Prompt: "Deskripsi mood: ",
+		prompt: "Deskripsi mood: ",
 		onSubmit: func(input string) {
 			mood.description = input
 		},
@@ -242,7 +242,7 @@ func appOptionMoodInsert() {
 	}
 
 	inputNumber(InputNumber{
-		Prompt: "Skor mood (1-10): ",
+		prompt: "Skor mood (1-10): ",
 		onSubmit: func(input float64) {
 			mood.score = int(input)
 		},
@@ -252,7 +252,7 @@ func appOptionMoodInsert() {
 	}
 
 	input(Input{
-		Prompt: "Tanggal (YYYY-MM-DD): ",
+		prompt: "Tanggal (YYYY-MM-DD): ",
 		onSubmit: func(input string) {
 			mood.date = input
 		},
@@ -270,7 +270,7 @@ func appOptionMoodUpdate() {
 		mood.id = Temp.id
 	} else {
 		inputNumber(InputNumber{
-			Prompt: "ID catatan mood: ",
+			prompt: "ID catatan mood: ",
 			onSubmit: func(input float64) {
 				mood.id = int(input)
 			},
@@ -283,7 +283,7 @@ func appOptionMoodUpdate() {
 	}
 
 	input(Input{
-		Prompt: "Deskripsi mood: (sama) ",
+		prompt: "Deskripsi mood: (sama) ",
 		onSubmit: func(input string) {
 			mood.description = input
 		},
@@ -294,7 +294,7 @@ func appOptionMoodUpdate() {
 	}
 
 	inputNumber(InputNumber{
-		Prompt: "Skor mood (1-10): (" + toString(moods[index].score) + ") ",
+		prompt: "Skor mood (1-10): (" + toString(moods[index].score) + ") ",
 		onSubmit: func(input float64) {
 			mood.score = int(input)
 		},
@@ -309,7 +309,7 @@ func appOptionMoodUpdate() {
 	}
 
 	input(Input{
-		Prompt: "Tanggal (YYYY-MM-DD): (" + toString(moods[index].date) + ") ",
+		prompt: "Tanggal (YYYY-MM-DD): (" + toString(moods[index].date) + ") ",
 		onSubmit: func(input string) {
 			mood.date = input
 		},
@@ -332,7 +332,7 @@ func appOptionMoodDelete() {
 		id = Temp.id
 	} else {
 		inputNumber(InputNumber{
-			Prompt: "ID catatan mood: ",
+			prompt: "ID catatan mood: ",
 			onSubmit: func(input float64) {
 				id = int(input)
 			},

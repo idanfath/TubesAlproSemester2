@@ -10,25 +10,33 @@ type AppConfig struct {
 	history      []string
 	pageParam    []any
 	currentPage  string
+	pagination   int
+}
+
+type table_page struct {
+	mood int
 }
 
 type TempData struct {
 	lastMotivationID any
 	id               int
+	table_page       int
 }
 
 var Temp = TempData{
 	lastMotivationID: -1,
 	id:               -1,
+	table_page:       1,
 }
 
 var App = AppConfig{
 	title:        "Mindflow",
-	width:        120,
+	width:        150,
 	topMargin:    2,
 	bottomMargin: 5,
 	history:      []string{},
 	currentPage:  "",
+	pagination:   10,
 }
 
 var KILLSIG bool
@@ -111,7 +119,9 @@ func initializeApp() {
 			},
 		},
 		{
-			name: "Mood",
+			name:      "Mood",
+			hasTable:  true,
+			dataCount: func() int { return len(moods) },
 			content: []RenderData{
 				{text: "Menu Mood"},
 				{text: "Kelola catatan mood harianmu dengan mudah!"},
@@ -141,7 +151,9 @@ func initializeApp() {
 			},
 		},
 		{
-			name: "MoodSearchResult",
+			name:      "MoodSearchResult",
+			hasTable:  true,
+			dataCount: func() int { return len(searchResultsMood) },
 			content: []RenderData{
 				{text: "Hasil Pencarian Catatan Mood"},
 				{dynamic: func() []string {
@@ -154,7 +166,9 @@ func initializeApp() {
 			},
 		},
 		{
-			name: "Task",
+			name:      "Task",
+			hasTable:  true,
+			dataCount: func() int { return len(tasks) },
 			content: []RenderData{
 				{text: "Menu Daftar Tugas"},
 				{breakline: true},
@@ -182,7 +196,9 @@ func initializeApp() {
 			},
 		},
 		{
-			name: "TaskSearchResult",
+			name:      "TaskSearchResult",
+			hasTable:  true,
+			dataCount: func() int { return len(searchResultsTask) },
 			content: []RenderData{
 				{text: "Hasil Pencarian Tugas"},
 				{dynamic: func() []string {

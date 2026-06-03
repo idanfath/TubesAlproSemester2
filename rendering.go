@@ -75,7 +75,7 @@ func handleRenderData(data RenderData) {
 		printMultiline(data.multiline)
 	}
 	if data.table != nil {
-		printTable(data.table())
+		printTable(data.table(), false)
 	}
 }
 
