@@ -14,8 +14,13 @@ var moods = []Mood{
 	{id: 2, description: "Agak stres dengan pekerjaan. Sedih banget pokoknya diputusin terus remedial aduhhh sad bgt coy", score: 1, date: "2024-06-02"},
 	{id: 3, description: "Merasa sangat bahagia!", score: 9, date: "2024-06-03"},
 }
+var searchResultsMood []Mood
 
 func MoodTable() Table {
+	return buildMoodTable(moods)
+}
+
+func buildMoodTable(moods []Mood) Table {
 	var table Table
 	table.header = []string{"ID", "Deskripsi", "Skor", "Tanggal"}
 	table.maxLengths = []int{5, 40, 5, 12}
@@ -56,7 +61,39 @@ func updateMood(id int, newMood Mood) {
 	moods[index] = newMood
 }
 
+func seqSearchMood(keyword string) []Mood {
+	var result []Mood
+	var i int
+	for i = 0; i < len(moods); i++ {
+		if contains(lower(moods[i].date), lower(keyword)) || contains(lower(moods[i].description), lower(keyword)) {
+			result = append(result, moods[i])
+		}
+	}
+	return result
+}
+
 // --
+
+func appOptionMoodSearch() {
+	var keyword string
+	input(Input{
+		Prompt: "Masukkan tanggal atau deskripsi mood yang dicari: ",
+		onSubmit: func(input string) {
+			keyword = lower(input)
+		},
+	})
+	if keyword == "" {
+		alert("Kata kunci tidak boleh kosong!")
+		return
+	}
+	var results = seqSearchMood(keyword)
+	if len(results) == 0 {
+		alert("Tidak ada catatan mood yang cocok.")
+		return
+	}
+	searchResultsMood = results
+	toPage("MoodSearchResult")
+}
 
 func appOptionMoodView() {
 	var id int

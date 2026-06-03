@@ -25,7 +25,7 @@ var Temp = TempData{
 var App = AppConfig{
 	title:        "Mindflow",
 	width:        150,
-	topMargin:    10,
+	topMargin:    2,
 	bottomMargin: 5,
 	history:      []string{},
 	currentPage:  "",
@@ -67,9 +67,6 @@ func initializeApp() {
 				{dynamic: appDynamicGetRandomMotivation},
 				{options: Options{
 					{
-						name: "Pencarian",
-						action: func() {
-							toPage("MenuPencarian")
 						name: "Menu Pencatatan Mood",
 						action: func() {
 							toPage("Mood")
@@ -122,6 +119,7 @@ func initializeApp() {
 				{table: MoodTable},
 				{
 					options: Options{
+						{name: "Cari Catatan Mood", action: appOptionMoodSearch},
 						{name: "Lihat Detail Catatan Mood", action: appOptionMoodView},
 						{name: "Tambah Catatan Mood", action: appOptionMoodInsert},
 						{name: "Ubah Catatan Mood", action: appOptionMoodUpdate},
@@ -143,31 +141,16 @@ func initializeApp() {
 			},
 		},
 		{
-			name: "MenuPencarian",
+			name: "MoodSearchResult",
 			content: []RenderData{
-				{text: "MENU PENCARIAN"},
-				{breakline: true},
-				{options: Options{
-					{
-						name: "Cari Catatan Mood (Sequential Search)",
-						action: func() {
-							carimood()
-						},
-					},
-					{
-						name: "Cari Tugas (Binary Search)",
-						action: func() {
-							caritask()
-						},
-					},
+				{text: "Hasil Pencarian Catatan Mood"},
+				{dynamic: func() []string {
+					return []string{"Ditemukan " + toString(len(searchResultsMood)) + " catatan mood yang cocok:"}
 				}},
-			},
-		},
-		{
-			name:   "Exit",
-			noBack: true,
-			content: []RenderData{
-				{text: "Exitting app.."},
+				{breakline: true},
+				{table: func() Table {
+					return buildMoodTable(searchResultsMood)
+				}},
 			},
 		},
 		{
@@ -177,6 +160,7 @@ func initializeApp() {
 				{breakline: true},
 				{table: TaskTable},
 				{options: Options{
+					{name: "Cari Tugas", action: appOptionTaskSearch},
 					{name: "Lihat Detail Tugas", action: appOptionTaskView},
 					{name: "Tambah Tugas", action: appOptionTaskInsert},
 					{name: "Ubah Tugas", action: appOptionTaskUpdate},
@@ -195,6 +179,26 @@ func initializeApp() {
 					{name: "Ubah Detail Tugas", action: appOptionTaskUpdate},
 					{name: "Hapus Tugas", action: appOptionTaskDelete},
 				}},
+			},
+		},
+		{
+			name: "TaskSearchResult",
+			content: []RenderData{
+				{text: "Hasil Pencarian Tugas"},
+				{dynamic: func() []string {
+					return []string{"Ditemukan " + toString(len(searchResultsTask)) + " tugas yang cocok:"}
+				}},
+				{breakline: true},
+				{table: func() Table {
+					return buildTaskTable(searchResultsTask)
+				}},
+			},
+		},
+		{
+			name:   "Exit",
+			noBack: true,
+			content: []RenderData{
+				{text: "Exitting app.."},
 			},
 		},
 	}

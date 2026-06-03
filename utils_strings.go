@@ -145,3 +145,28 @@ func stringswitch(condition bool, trueVal string, falseVal string) string {
 	}
 	return falseVal
 }
+
+// untuk lowercase search, tugas pemanggil, bukan tugas fungsi ini.
+func contains(str string, substr string) bool {
+	var lenStr, lenSub, i int
+	lenStr = len(str)
+	lenSub = len(substr)
+
+	// kalo substring lebih panjang otomatis gagal
+	if lenSub > lenStr || lenSub == 0 {
+		return false
+	}
+
+	if lenStr == lenSub {
+		return str == substr
+	}
+
+	// cari dari index 0 sampai index yang masih muat substringnya
+	for i = 0; i <= lenStr-lenSub; i++ {
+		// misal str = "testing", substr = "STI", iterasi 1 bandingkan [tes]ting dengan sti, iterasi 2 bandingkan te[sti]ng dengan sti
+		if str[i:i+lenSub] == substr {
+			return true
+		}
+	}
+	return false
+}

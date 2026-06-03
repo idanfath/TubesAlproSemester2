@@ -15,20 +15,21 @@ func longestOptionName(options Options) int {
 	return max
 }
 
-// tambahkan opsi back jika memungkinkan, pakai "..."
-// kalau gaboleh pake "..." bisa dihardcode di function showOptions dan runOptions
 func buildOptions(options Options) Options {
+	var result Options
+	var i int
 	if len(App.history) > 0 && !getPage(App.currentPage).noBack {
-		return append(Options{
-			{
-				name: "Back",
-				action: func() {
-					back()
-				},
+		result = append(result, Option{
+			name: "Back",
+			action: func() {
+				back()
 			},
-		}, options...)
+		})
 	}
-	return options
+	for i = 0; i < len(options); i++ {
+		result = append(result, options[i])
+	}
+	return result
 }
 
 func runOption(options Options, index int) {

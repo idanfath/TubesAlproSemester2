@@ -15,6 +15,7 @@ var tasks = []Task{
 	{id: 2, title: "Olahraga", priority: 2, duration: 60, isCompleted: true},
 	{id: 3, title: "Membaca Buku", priority: 3, duration: 90, isCompleted: false},
 }
+var searchResultsTask []Task
 
 var task_priority = [3]string{"Tinggi", "Sedang", "Rendah"}
 
@@ -40,6 +41,10 @@ func TablePriorityTask() Table {
 }
 
 func TaskTable() Table {
+	return buildTaskTable(tasks)
+}
+
+func buildTaskTable(tasks []Task) Table {
 	var table Table
 	table.header = []string{"ID", "Deskripsi", "Prioritas", "Durasi", "Status"}
 	table.maxLengths = []int{5, 40, 10, 20, 20}
@@ -92,7 +97,39 @@ func getMaxTaskID() int {
 	return max_index
 }
 
+func seqSearchTask(keyword string) []Task {
+	var result []Task
+	var i int
+	for i = 0; i < len(tasks); i++ {
+		if contains(lower(tasks[i].title), lower(keyword)) || contains(lower(getLabelPriorityTask(tasks[i].priority)), lower(keyword)) || contains(lower(minuteToTime(tasks[i].duration)), lower(keyword)) || contains(lower(stringswitch(tasks[i].isCompleted, "Selesai", "Belum Selesai")), lower(keyword)) {
+			result = append(result, tasks[i])
+		}
+	}
+	return result
+}
+
 // --
+
+func appOptionTaskSearch() {
+	var keyword string
+	input(Input{
+		Prompt: "Masukkan pencarian: ",
+		onSubmit: func(input string) {
+			keyword = lower(input)
+		},
+	})
+	if keyword == "" {
+		alert("Kata kunci tidak boleh kosong!")
+		return
+	}
+	var results = seqSearchTask(keyword)
+	if len(results) == 0 {
+		alert("Tidak ada catatan tugas yang cocok.")
+		return
+	}
+	searchResultsTask = results
+	toPage("TaskSearchResult")
+}
 
 func appOptionTaskView() {
 	var id int

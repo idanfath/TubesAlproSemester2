@@ -74,7 +74,6 @@ func handleRenderData(data RenderData) {
 	if len(data.multiline) > 0 {
 		printMultiline(data.multiline)
 	}
-	// harus != nil, karna default value fungsi itu nil
 	if data.table != nil {
 		printTable(data.table())
 	}
