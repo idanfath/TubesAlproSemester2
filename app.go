@@ -24,7 +24,7 @@ var Temp = TempData{
 
 var App = AppConfig{
 	title:        "Mindflow",
-	width:        150,
+	width:        120,
 	topMargin:    2,
 	bottomMargin: 5,
 	history:      []string{},

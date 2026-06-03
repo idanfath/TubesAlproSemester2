@@ -138,8 +138,14 @@ func isNumStr(s string, expectNegative bool) bool {
 	return true
 }
 
-// simple string switch, basically ? : (ini golang knp gapunya fitur gini dah)
+// simple switch, basically ? : (ini golang knp gapunya fitur gini dah)
 func stringswitch(condition bool, trueVal string, falseVal string) string {
+	if condition {
+		return trueVal
+	}
+	return falseVal
+}
+func intSwitch(condition bool, trueVal int, falseVal int) int {
 	if condition {
 		return trueVal
 	}

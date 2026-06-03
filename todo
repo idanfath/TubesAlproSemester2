@@ -1,3 +1,2 @@
-sortir berdasarkan tabel berdasarkan preferensi
-pagination
-search binary, khusus buat priorias, dan durasi (bolehin pilih searching mau search deskripsi atau prioritas, etc)
+pagination (penting!)
+binary search di mood pisah, perfect-in dulu baru buat search/sorting ke fitur lain
