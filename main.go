@@ -1,14 +1,17 @@
 package main
 
 func main() {
-	// inisialisasi aplikasi, termasuk halaman, konfigurasi, dll
-	initializeApp()
-	// do while, karna mau render dulu sekali sebelum stop loop
-	for {
-		render()
-		if KILLSIG {
-			render()
-			break
+	for !SIGKILL {
+		title("Selamat datang di " + App.title)
+		var operation int = getOptions([]string{"Pencatatan Mood", "Pencatatan Tugas", "Keluar"})
+		switch operation {
+		case 1:
+			pencatatanMood(true)
+		case 2:
+			pencatatanTask(true)
+		case 3:
+			show("Goodbye world")
+			exit()
 		}
 	}
 }

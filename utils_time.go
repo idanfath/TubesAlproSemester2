@@ -1,7 +1,15 @@
 package main
 
-func validateDate(year, month, day int) bool {
-	if year < 0 || month < 1 || month > 12 {
+import "fmt"
+
+type Date struct {
+	year  int
+	month int
+	day   int
+}
+
+func isValidDate(date Date) bool {
+	if date.year < 0 || date.month < 1 || date.month > 12 || date.day < 1 || date.day > 31 {
 		return false
 	}
 
@@ -9,11 +17,11 @@ func validateDate(year, month, day int) bool {
 	var daysInMonth = [13]int{0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
 
 	// handle tahun kabisat
-	if month == 2 && isLeapYear(year) {
+	if date.month == 2 && isLeapYear(date.year) {
 		daysInMonth[2] = 29
 	}
 
-	if day < 1 || day > daysInMonth[month] {
+	if date.day < 1 || date.day > daysInMonth[date.month] {
 		return false
 	}
 
@@ -27,19 +35,23 @@ func isLeapYear(year int) bool {
 	return false
 }
 
-func minuteToTime(minutes int) string {
-	var hours, mins int
-	var s string
-	hours = minutes / 60
-	mins = minutes % 60
-	if hours > 0 {
-		s += toString(hours) + " Jam "
-	}
-	if mins > 0 {
-		s += toString(mins) + " Menit"
-	}
-	if s == "" {
-		s = "0 Menit"
-	}
-	return s
+func datestring(date Date) string {
+	// %02d artinya apa bang mesi, %xyd, x = karakter padding, y = ukuran padding, d = integer (tipe data)
+	return fmt.Sprintf("%04d-%02d-%02d", date.year, date.month, date.day)
 }
+
+// // cari tanggal selanjutnya yg msh valid
+// func getNextValidDate(date Date) Date {
+// 	var nextDate Date = date
+// 	for !isValidDate(nextDate) && nextDate != date {
+// 		nextDate.day++
+// 		if nextDate.day > 31 {
+// 			nextDate.month++
+// 			nextDate.day = 1
+// 		}
+// 		if nextDate.month > 12 {
+// 			nextDate.year++
+// 		}
+// 	}
+// 	return nextDate
+// }
