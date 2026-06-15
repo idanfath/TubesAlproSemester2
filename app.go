@@ -20,5 +20,4 @@ var SIGKILL bool = false
 
 func exit() {
 	SIGKILL = true
-	return
 }
