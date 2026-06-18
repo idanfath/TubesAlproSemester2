@@ -1,17 +1,28 @@
 package main
 
+// ====================== MAIN
+
+type Opsi [NMAX]string
+type SortStatus struct {
+	sorted   bool
+	asc      bool
+	sortedby string
+}
+
+// fungsi utama program, menampilkan menu utama
 func main() {
-	for !SIGKILL {
-		title("Selamat datang di " + App.title)
-		var operation int = getOptions([]string{"Pencatatan Mood", "Pencatatan Tugas", "Keluar"})
+	var stop bool
+	for !stop {
+		title("Selamat datang di Mindflow")
+		var operation int = getOptions(Opsi{"Pencatatan Mood", "Pencatatan Tugas", "Keluar"}, 3)
 		switch operation {
 		case 1:
-			pencatatanMood(true)
+			MoodPage()
 		case 2:
-			pencatatanTask(true)
+			TaskPage()
 		case 3:
 			show("Goodbye world")
-			exit()
+			stop = true
 		}
 	}
 }

@@ -2,40 +2,42 @@ package main
 
 import "fmt"
 
+// fungsi untuk menampilkan string di tengah layar (centered)
 func show(input string) {
 	fmt.Println(cen(input))
 }
 
+// fungsi untuk menampilkan string di tengah layar tanpa newline
 func showinline(input string) {
 	fmt.Print(cen(input))
 }
 
-// loop inputs, ubah ke string, satukan lalu print
-// func showMany(inputs []any) {
-// 	var i int
-// 	var s string
-// 	for i = 0; i < len(inputs); i++ {
-// 		s = s + " " + toString(inputs[i])
-// 	}
-// 	show(s)
-// }
-
-func getOptions(options []string) int {
+// fungsi untuk menampilkan dan mengembalikan index+1 option yang dipilih user
+func getOptions(options [NMAX]string, n int) int {
 	var i int
 	// print options
-	for i = 0; i < len(options); i++ {
+	show("")
+	for i = 0; i < n; i++ {
 		// contoh: [1] Keluar
 		show(fmt.Sprintf("[%d] %s", i+1, options[i]))
 	}
 	// wait for input
 	var x int = 0
-	showinline("Pilih opsi: ")
-	fmt.Scan(&x)
+	var valid bool = false
+	for !valid {
+		showinline("Pilih opsi: ")
+		fmt.Scan(&x)
+		if x >= 1 && x <= n {
+			valid = true
+		} else {
+			show("Opsi tidak valid, silakan pilih lagi")
+		}
+	}
 	return x
 }
 
+// reusable untuk menampilkan judul halaman
 func title(name string) {
 	show("")
 	show("-- " + name + " --")
-	show("")
 }

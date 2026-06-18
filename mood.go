@@ -2,6 +2,8 @@ package main
 
 import "fmt"
 
+// ====================== MOOD
+
 type Mood struct {
 	id          int
 	description string
@@ -9,98 +11,179 @@ type Mood struct {
 	date        Date
 }
 
-const MAX_MOOD = 9999
+const NMAX = 9999
 
-var moods = [MAX_MOOD]Mood{
-	{id: 1, description: "Hari yang menyenangkan!", score: 8, date: Date{year: 2024, month: 6, day: 1}},
-	{id: 2, description: "Agak stres dengan pekerjaan. Sedih banget pokoknya diputusin terus remedial aduhhh sad bgt coy", score: 1, date: Date{year: 2024, month: 6, day: 2}},
-	{id: 3, description: "Merasa sangat bahagia!", score: 9, date: Date{year: 2024, month: 6, day: 3}},
-	{id: 4, description: "Biasa aja, flat banget seharian ga ngapa-ngapain.", score: 5, date: Date{year: 2024, month: 6, day: 4}},
-	{id: 5, description: "Dapet sanksi telat masuk kantor, apes banget.", score: 3, date: Date{year: 2024, month: 6, day: 5}},
-	{id: 6, description: "Project akhirnya kelar dan diapprove client, lega!", score: 8, date: Date{year: 2024, month: 6, day: 6}},
-	{id: 7, description: "Mulai pelihara kucing baru, gemes banget bikin mood naik.", score: 9, date: Date{year: 2024, month: 6, day: 7}},
-	{id: 8, description: "Badan agak meriang dan pusing, cuma rebahan doang.", score: 4, date: Date{year: 2024, month: 6, day: 8}},
-	{id: 9, description: "Minggu produktif, berhasil beres-beres kamar yang berantakan.", score: 7, date: Date{year: 2024, month: 6, day: 9}},
-	{id: 10, description: "Gaji masuk! Waktunya self reward makan enak.", score: 10, date: Date{year: 2024, month: 6, day: 10}},
-	{id: 11, description: "Sakit gigi melanda, ga bisa tidur semalaman.", score: 2, date: Date{year: 2024, month: 6, day: 11}},
-	{id: 12, description: "Kondisi membaik, dapet kopi gratis dari temen kantor.", score: 6, date: Date{year: 2024, month: 6, day: 12}},
-	{id: 13, description: "Terjebak macet total pas hujan deras, capek banget di jalan.", score: 3, date: Date{year: 2024, month: 6, day: 13}},
-	{id: 14, description: "Nonton konser band favorit, capek tapi seru parah!", score: 9, date: Date{year: 2024, month: 6, day: 14}},
-	{id: 15, description: "Santai di rumah sambil marathon series bareng keluarga.", score: 8, date: Date{year: 2024, month: 6, day: 15}},
+type Moods [NMAX]Mood
+
+// mengarahkan menu dan navigasi halaman pencatatan mood
+func MoodPage() {
+	// ID, Deskripsi, Skor, Tanggal
+	var moods = Moods{
+		{id: 1, description: "gila gw happy banget!", score: 8, date: Date{year: 2026, month: 6, day: 1}},
+		{id: 2, description: "ga belajar tapi tetep lulus coy", score: 10, date: Date{year: 2026, month: 6, day: 2}},
+		{id: 3, description: "coba ga belajar lagi, mau tes hoki, dpt 20", score: 3, date: Date{year: 2026, month: 6, day: 3}},
+		{id: 4, description: "Biasa aja sih", score: 5, date: Date{year: 2026, month: 6, day: 4}},
+		{id: 5, description: "lagi apes hari ini", score: 3, date: Date{year: 2026, month: 6, day: 5}},
+		{id: 6, description: "Project tubes akhirnya kelar", score: 8, date: Date{year: 2026, month: 6, day: 6}},
+		{id: 7, description: "dapet SKIN vandallll", score: 9, date: Date{year: 2026, month: 6, day: 7}},
+		{id: 8, description: "Badan agak kurang enak", score: 4, date: Date{year: 2026, month: 6, day: 8}},
+		{id: 9, description: "cukup happy", score: 7, date: Date{year: 2026, month: 6, day: 9}},
+		{id: 10, description: "Gila menang HACKATHON", score: 10, date: Date{year: 2026, month: 6, day: 10}},
+		{id: 11, description: "lagi kurang enak badan", score: 2, date: Date{year: 2026, month: 6, day: 11}},
+		{id: 12, description: "happy sih cuma quiz kalkulus ga sesuai ekspetasi", score: 6, date: Date{year: 2026, month: 6, day: 12}},
+		{id: 13, description: "jalanan telkom macettt", score: 3, date: Date{year: 2026, month: 6, day: 13}},
+		{id: 14, description: "gila paper rax go to ewc", score: 9, date: Date{year: 2026, month: 6, day: 14}},
+		{id: 15, description: "damn qots basis data se ez itu", score: 8, date: Date{year: 2026, month: 6, day: 15}},
+	}
+	var moodCount int = 15
+	var moodSort = SortStatus{sorted: true, asc: true, sortedby: "ID"} //wajib set sorted ke false tiap modifikasi (crud) moodnya
+	title("Halaman Pencatatan Mood")
+	var quitpage bool = false
+	for !quitpage {
+		var option int = getOptions(Opsi{"List", "Lihat", "Cari", "Tambah", "Edit", "Hapus", "Sorting", "Statistik", "Beranda"}, 9)
+		switch option {
+		case 1: // list
+			optionListMoods(moods, moodCount, moodSort)
+		case 2: // lihat
+			optionShowMoods(moods, moodCount, moodSort)
+		case 3: // search
+			optionSearchMoods(moods, moodCount, moodSort)
+		case 4: // add
+			optionAddMood(&moods, &moodCount, &moodSort)
+		case 5: // edit
+			optionEditMood(&moods, moodCount, &moodSort)
+		case 6: // hapus
+			optionDeleteMood(&moods, &moodCount, &moodSort)
+		case 7: // sort
+			optionSortMood(&moods, moodCount, &moodSort)
+		case 8: // statistikkkkkkkkkk
+			optionShowStatistikMood(moods, moodCount)
+		case 9:
+			quitpage = true
+		}
+	}
 }
 
-var moodCount int = 15
-
-func showMoods() {
+// menampilkan seluruh daftar mood
+func optionListMoods(t Moods, n int, ss SortStatus) {
 	var i int
-	for i = 0; i < moodCount; i++ {
-		fmt.Printf("[%d] Mood %d/10 | %s | %s\n", moods[i].id, moods[i].score, datestring(moods[i].date), truncate(moods[i].description, (App.width/3)*2))
+	show("")
+	for i = 0; i < n; i++ {
+		fmt.Printf("[%d] Mood %d/10 | %s | %s\n", t[i].id, t[i].score, datestring(t[i].date, true), t[i].description)
 	}
+	if ss.sorted && n > 0 {
+		show(fmt.Sprintf("Diurutkan berdasarkan %s secara %s", ss.sortedby, ifstring(ss.asc, "Ascending", "Descending")))
+	}
+}
+
+// mencari mood berdasarkan keyword atau tanggal
+func optionSearchMoods(t Moods, n int, ss SortStatus) {
+	var i, resultCount int
+	var targetDesc string
+	var targetDate Date
+	var result Moods
+
+	var searchByOption = Opsi{"Kata Kunci (Deskripsi)", "Tanggal"}
+	var searchBy int = getOptions(searchByOption, 2)
+
+	switch searchBy {
+	case 1:
+		for len(targetDesc) == 0 {
+			showinline("Masukkan keyword pencarian: ")
+			fmt.Scanln(&targetDesc)
+			targetDesc = replace(targetDesc, "_", " ")
+		}
+	case 2:
+		for !isValidDate(targetDate) {
+			showinline("Masukkan tanggal (contoh: 2069 12 17): ")
+			fmt.Scanf("%d %d %d", &targetDate.year, &targetDate.month, &targetDate.day)
+		}
+	}
+
+	if ss.sorted && searchBy == 2 && ss.sortedby == "Tanggal" {
+		var left, right, mid, i int
+		var startingidx int = -1
+		left = 0
+		right = n - 1
+		// binary search
+		for left <= right && startingidx == -1 {
+			mid = left + (right-left)/2
+			if t[mid].date == targetDate {
+				startingidx = mid
+			} else if isDateLarger(targetDate, t[mid].date) {
+				if ss.asc {
+					left = mid + 1
+				} else {
+					right = mid - 1
+				}
+			} else if isDateLarger(t[mid].date, targetDate) {
+				if ss.asc {
+					right = mid - 1
+				} else {
+					left = mid + 1
+				}
+			}
+		}
+		if startingidx == -1 {
+			show("")
+			show("Tidak ditemukan hasil apapun")
+			return
+		}
+		// ketemu starting idx, cari upper dan lowerbound, reuse variable
+		left = startingidx
+		right = startingidx
+		// lower bound
+		for left > 0 && t[left-1].date == targetDate {
+			left--
+		}
+		// upper bound
+		for right < n-1 && t[right+1].date == targetDate {
+			right++
+		}
+		// masukin ke result
+		for i = left; i <= right; i++ {
+			result[resultCount] = t[i]
+			resultCount++
+		}
+		show("")
+		show(fmt.Sprintf("Ketemu %d hasil menggunakan Binary Search (%s)", resultCount, ifstring(ss.asc, "Ascending", "Descending")))
+	} else {
+		// seq search
+		for i = 0; i < n; i++ {
+			if (searchBy == 1 && contains(lower(t[i].description), lower(targetDesc))) || (searchBy == 2 && t[i].date == targetDate) {
+				result[resultCount] = t[i]
+				resultCount++
+			}
+		}
+		if resultCount < 1 {
+			show("")
+			show("Tidak ditemukan hasil apapun")
+			return
+		}
+		show("")
+		show(fmt.Sprintf("Ketemu %d hasil menggunakan Sequential Search", resultCount))
+	}
+	//kalo arr yg dicari sorted, hasilnya udh pasti sorted juga (kyknya)
+	optionListMoods(result, resultCount, ss)
+}
+
+// menampilkan detail mood berdasarkan ID
+func optionShowMoods(moods Moods, moodCount int, moodSort SortStatus) {
+	var idx int = getMoodIdxFromId(moods, moodCount, moodSort)
+	if idx == -1 {
+		show("ID Tidak Ditemukan")
+		return
+	}
+	show("")
+	show(fmt.Sprintf("[%d] %d/10 | %s", moods[idx].id, moods[idx].score, datestring(moods[idx].date, false)))
+	show(moods[idx].description)
 	show("")
 }
 
-func pencatatanMood(showItems bool) {
-	title("Halaman Pencatatan Mood")
-	if showItems {
-		showMoods()
-	}
-	var option int = getOptions([]string{"Lihat", "Tambah", "Edit", "Hapus", "Beranda"})
-	switch option {
-	case 1:
-		optionLihatMood()
-	case 2:
-		optionTambahMood()
-	case 3:
-		optionEditMood()
-	case 4:
-		optionHapusMood()
-	case 5:
-		return
-	}
-}
-
-func optionEditMood() {
-	var mood, oldMood Mood
-	var idx int = -1
-	for idx == -1 {
-		idx = getMoodIdxFromId()
-	}
-	oldMood = moods[idx]
-	mood.id = oldMood.id
-
-	show("Kosongkan untuk menggunakan data lama")
-	for mood.score < 1 || mood.score > 10 {
-		showinline(fmt.Sprintf("Masukkan skor mood (1-10): (%d) ", oldMood.score))
-		fmt.Scanln(&mood.score)
-		if mood.score == 0 {
-			mood.score = oldMood.score
-		}
-	}
-
-	showinline(fmt.Sprintf("Masukkan deskripsi mood (contoh: sangat_senang): (%s) ", truncate(oldMood.description, 12)))
-	fmt.Scanln(&mood.description)
-	if len(mood.description) == 0 {
-		mood.description = oldMood.description
-	}
-	mood.description = replace(mood.description, "_", " ")
-
-	for !isValidDate(mood.date) {
-		showinline(fmt.Sprintf("Masukkan tanggal pencatatan mood (contoh: 2024 12 17): (%s) ", datestring(oldMood.date)))
-		fmt.Scanln(&mood.date.year)
-		if mood.date.year == 0 {
-			mood.date = oldMood.date
-		} else {
-			fmt.Scanln(&mood.date.month, &mood.date.day)
-		}
-	}
-
-	updateMood(idx, mood)
-	pencatatanMood(true)
-}
-
-func optionTambahMood() {
+// menginput dan menambahkan mood baru ke array
+func optionAddMood(t *Moods, n *int, ss *SortStatus) {
 	var mood Mood
-	var highestIdMood = moods[getHighestIdMoodIdx()]
+	var highestIdMood = t[getHighestIdMoodIdx(*t, *n, *ss)]
 	mood.id = highestIdMood.id + 1
 	for mood.score < 1 || mood.score > 10 {
 		showinline("Masukkan skor mood (1-10): ")
@@ -113,82 +196,250 @@ func optionTambahMood() {
 	}
 	for !isValidDate(mood.date) {
 		showinline("Masukkan tanggal pencatatan mood (contoh: 2024 12 17): ")
-		fmt.Scanln(&mood.date.year, &mood.date.month, &mood.date.day)
+		fmt.Scanf("%d %d %d", &mood.date.year, &mood.date.month, &mood.date.day)
 	}
-	insertMood(mood)
-	pencatatanMood(true)
-}
-
-func optionHapusMood() {
-	var idx int = -1
-	for idx == -1 {
-		idx = getMoodIdxFromId()
-	}
-	deleteMood(idx)
-	pencatatanMood(true)
-}
-
-func optionLihatMood() {
-	var idx int = -1
-	for idx == -1 {
-		idx = getMoodIdxFromId()
-	}
+	t[*n] = mood
+	*n++
+	ss.sorted = false
 	show("")
-	show(fmt.Sprintf("[%d] %d/10 | %s", moods[idx].id, moods[idx].score, datestring(moods[idx].date)))
-	show(moods[idx].description)
-	show("")
-	pencatatanMood(false)
+	show(fmt.Sprintf("Mood [%d] %d/10 %s %s berhasil ditambahkan", mood.id, mood.score, datestring(mood.date, true), truncate(mood.description, 10)))
 }
 
-// sequential search, return indexnya
-func findMood(id int) int {
-	var i int
-	for i = 0; i < moodCount; i++ {
-		if moods[i].id == id {
-			return i
+// mengedit mood berdasarkan ID, user bisa pilih field mana yang mau diedit, dan bisa mengostongkan input kalau mau pakai data lama
+func optionEditMood(t *Moods, n int, ss *SortStatus) {
+	var m, oldm Mood
+	var idx int = getMoodIdxFromId(*t, n, *ss)
+
+	if idx == -1 {
+		show("ID Tidak Ditemukan")
+		return
+	}
+
+	oldm = t[idx]
+	m.id = oldm.id
+
+	show("Kosongkan untuk menggunakan data lama")
+	for m.score < 1 || m.score > 10 {
+		showinline(fmt.Sprintf("Masukkan skor mood (1-10): (%d) ", oldm.score))
+		fmt.Scanln(&m.score)
+		if m.score == 0 {
+			m.score = oldm.score
 		}
 	}
+
+	showinline(fmt.Sprintf("Masukkan deskripsi mood (contoh: sangat_senang): (%s) ", truncate(oldm.description, 12)))
+	fmt.Scanln(&m.description)
+	if len(m.description) == 0 {
+		m.description = oldm.description
+	}
+	m.description = replace(m.description, "_", " ")
+
+	for !isValidDate(m.date) {
+		showinline(fmt.Sprintf("Masukkan tanggal pencatatan mood (contoh: 2029 12 17): (%s) ", datestring(oldm.date, false)))
+		fmt.Scanf("%d", &m.date.year)
+		if m.date.year == 0 {
+			m.date = oldm.date
+		} else {
+			fmt.Scanf("%d %d", &m.date.month, &m.date.day)
+		}
+	}
+	t[idx] = m
+	ss.sorted = false
+	show("")
+	show(fmt.Sprintf("Mood [%d] berhasil diedit", m.id))
+}
+
+// menghapus mood dengan ID, lalu geser semua mood di kanannya 1 langkah ke kiri, lalu kurangi jumlah mood
+func optionDeleteMood(t *Moods, n *int, ss *SortStatus) {
+	var idx int = getMoodIdxFromId(*t, *n, *ss)
+	if idx == -1 {
+		show("ID Tidak Ditemukan")
+		return
+	}
+	var id int = t[idx].id
+	var i int
+	for i = idx; i < *n-1; i++ {
+		t[i] = t[i+1]
+	}
+	t[*n-1] = Mood{}
+	*n = *n - 1
+	ss.sorted = false
+	show("")
+	show(fmt.Sprintf("Mood [%d] berhasil dihapus", id))
+}
+
+// sorting mood berdasarkan field dan urutan dari pilihan user
+func optionSortMood(t *Moods, n int, ss *SortStatus) {
+	var urutan int = getOptions(Opsi{"Ascending (A-Z)", "Descending (Z-A)"}, 2)
+	// kalo ubah orderby, ubah bandinginMood juga
+	var pilihanOrder = Opsi{"ID", "Deskripsi", "Skor", "Tanggal"}
+	var orderby int = getOptions(pilihanOrder, 4)
+	// selection sort
+	sortMood(t, n, orderby, urutan)
+	ss.sorted = true
+	ss.sortedby = pilihanOrder[orderby-1]
+	ss.asc = urutan == 1
+	show("")
+	show(fmt.Sprintf("Berhasil diurutkan berdasarkan %s secara %s", ss.sortedby, ifstring(ss.asc, "Ascending", "Descending")))
+}
+
+// menampilkan statistik mood mingguan, user bisa pilih berapa minggu terakhir yang mau ditampilkan
+func optionShowStatistikMood(t Moods, n int) {
+	if n == 0 {
+		show("Tidak ada data")
+		return
+	}
+	var maxWeek int
+	for maxWeek == 0 {
+		showinline("Masukkan jumlah minggu untuk statistik (Minimal 1): ")
+		fmt.Scanln(&maxWeek)
+	}
+	// isi temp, sort dulu biar enak
+	sortMood(&t, n, 4, 2)
+	var currentDate = t[0].date
+	var i, j int
+	j = 0
+	var week int
+	week = 1
+	var valid bool = true
+	show("")
+	for week <= maxWeek && valid {
+		var thisweekscore = 0
+		var thisweekdatacount = 0
+		var startingweek = currentDate
+		var endingweek Date
+		i = 0
+		for i < 7 && j < n {
+			// loop dari 0 sampai datenya beda, tambahin ke score dan datacount
+			for j < n && currentDate == t[j].date {
+				thisweekscore += t[j].score
+				thisweekdatacount++
+				j++
+			}
+			// sebelum diubah, kita store dulu buat display aja
+			if i == 6 || j >= n {
+				endingweek = currentDate
+			}
+			currentDate = getYesterday(currentDate)
+			i++
+		}
+		var avg float64
+		if thisweekdatacount > 0 {
+			avg = float64(thisweekscore) / float64(thisweekdatacount)
+		}
+		show(fmt.Sprintf("Minggu %d %s [%s s/d %s] | Rata-rata Mood: %.2f (%d data)",
+			week,
+			ifstring(week == 1, "(Minggu Ini)", fmt.Sprintf("(%d Minggu Lalu)", week-1)),
+			datestring(startingweek, true),
+			datestring(endingweek, true),
+			avg,
+			thisweekdatacount))
+		if j >= n {
+			valid = false
+		}
+		week++
+	}
+}
+
+// ====================== MOOD (UTILITY)
+
+// utilitas untuk mencari index mood berdsarkan ID, menggunakan binary search jika sorted by ID, jika tidak, menggunakan sequential search
+func findMood(t Moods, n int, ss SortStatus, id int) int {
+	var i int
+	if ss.sorted && ss.sortedby == "ID" {
+		// binary search kalo mendukung
+		var left, right, mid int
+		left = 0
+		right = n - 1
+		for left <= right {
+			mid = left + (right-left)/2
+			if t[mid].id == id {
+				return mid
+			} else if t[mid].id < id {
+				if ss.asc {
+					left = mid + 1
+				} else {
+					right = mid - 1
+				}
+			} else {
+				if ss.asc {
+					right = mid - 1
+				} else {
+					left = mid + 1
+				}
+			}
+		}
+	} else {
+		for i = 0; i < n; i++ {
+			if t[i].id == id {
+				return i
+			}
+		}
+	}
+
 	return -1
 }
 
-func getHighestIdMoodIdx() int {
+// utilitas untuk mendapatkan index mood dgn ID tertinggi, utk add mood, kalau udah sorted by ID, tinggal ambil first atua last element sesuai urutan sorting, jika tidak, cari dengan sequential search
+func getHighestIdMoodIdx(t Moods, n int, ss SortStatus) int {
+	if ss.sorted && ss.sortedby == "ID" {
+		if ss.asc {
+			return n - 1
+		} else {
+			return 0
+		}
+	}
 	var max_idx = 0
 	var i int
-	for i = 0; i < moodCount; i++ {
-		if moods[i].id > moods[max_idx].id {
+	for i = 0; i < n; i++ {
+		if t[i].id > t[max_idx].id {
 			max_idx = i
 		}
 	}
 	return max_idx
 }
 
-func getMoodIdxFromId() int {
+// reusable function, untuk input ID dan mendapatkan index mood
+func getMoodIdxFromId(t Moods, n int, ss SortStatus) int {
 	showinline("Masukkan ID Mood: ")
 	var x int
 	fmt.Scanln(&x)
-	return findMood(x)
+	return findMood(t, n, ss, x)
 }
 
-func deleteMood(idx int) {
-	var newMood [MAX_MOOD]Mood
-	var j, i int
-	j = 0
-	for i = 0; i < moodCount; i++ {
-		if i == idx {
-			continue
-		}
-		newMood[j] = moods[i]
-		j++
+// fungsi utility untuk membandingkan dua mood berdsarkan field dan urutan sorting
+func bandinginMood(t1 Mood, t2 Mood, orderby int, biggerthan bool) bool {
+	var result bool
+	switch orderby {
+	case 1:
+		result = t1.id > t2.id
+	case 2:
+		result = t1.description > t2.description
+	case 3:
+		result = t1.score > t2.score
+	case 4:
+		result = isDateLarger(t1.date, t2.date)
 	}
-	moods = newMood
-	moodCount = j
+	if biggerthan {
+		return result
+	}
+	return !result
 }
 
-func insertMood(mood Mood) {
-	moods[moodCount] = mood
-	moodCount++
-}
-
-func updateMood(idx int, mood Mood) {
-	moods[idx] = mood
+// logika utama untuk sorting mood (selection sort)
+func sortMood(t *Moods, n int, orderby int, urutan int) {
+	var i, j, extreme int
+	var temp Mood
+	for i = 0; i < n; i++ {
+		extreme = i
+		for j = i + 1; j < n; j++ {
+			// kalo descending, kita moods[j] hrs lbh gede dri moods[extreme]
+			if bandinginMood(t[j], t[extreme], orderby, urutan == 2) {
+				extreme = j
+			}
+		}
+		temp = t[i]
+		t[i] = t[extreme]
+		t[extreme] = temp
+	}
 }
