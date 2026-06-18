@@ -297,8 +297,9 @@ func optionShowStatistikMood(t Moods, n int) {
 	// isi temp, sort dulu biar enak
 	sortMood(&t, n, 4, 2)
 	var currentDate = t[0].date
-	var i, j int
-	j = 0
+	var endingweek Date
+	var day, pointer int
+	pointer = 0
 	var week int
 	week = 1
 	var valid bool = true
@@ -306,23 +307,23 @@ func optionShowStatistikMood(t Moods, n int) {
 	for week <= maxWeek && valid {
 		var thisweekscore = 0
 		var thisweekdatacount = 0
-		var startingweek = currentDate
-		var endingweek Date
-		i = 0
-		for i < 7 && j < n {
+		var startingweek = currentDate // cuma buat display
+		day = 0
+		for day < 7 && pointer < n {
 			// loop dari 0 sampai datenya beda, tambahin ke score dan datacount
-			for j < n && currentDate == t[j].date {
-				thisweekscore += t[j].score
+			for pointer < n && currentDate == t[pointer].date {
+				thisweekscore += t[pointer].score
 				thisweekdatacount++
-				j++
+				pointer++
 			}
 			// sebelum diubah, kita store dulu buat display aja
-			if i == 6 || j >= n {
+			if day == 6 || pointer >= n {
 				endingweek = currentDate
 			}
 			currentDate = getYesterday(currentDate)
-			i++
+			day++
 		}
+
 		var avg float64
 		if thisweekdatacount > 0 {
 			avg = float64(thisweekscore) / float64(thisweekdatacount)
@@ -334,7 +335,8 @@ func optionShowStatistikMood(t Moods, n int) {
 			datestring(endingweek, true),
 			avg,
 			thisweekdatacount))
-		if j >= n {
+
+		if pointer >= n {
 			valid = false
 		}
 		week++
