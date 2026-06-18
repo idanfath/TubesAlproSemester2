@@ -436,30 +436,6 @@ func sortTask(t *Tasks, n int, orderby int, urutan int) {
 	}
 }
 
-// mengurutkan array data tugas dengan Insertion Sort
-func insort(t *Tasks, n int, orderby int, urutan int) {
-	var i, j int
-	var key Task
-	// anggap i=0 udah sorted
-	for i = 1; i < n; i++ {
-		key = t[i]
-		j = i - 1
-		if urutan == 1 {
-			// kalo asc, kita mau tuker elemen kiri yang lebih besar ke kanan
-			for j >= 0 && bandinginTask(t[j], key, orderby, true) {
-				t[j+1] = t[j]
-				j--
-			}
-		} else {
-			for j >= 0 && bandinginTask(t[j], key, orderby, false) {
-				t[j+1] = t[j]
-				j--
-			}
-		}
-		t[j+1] = key
-	}
-}
-
 // mencari indeks tugas dengan ID terbesar saat ini
 func getHighestIdTaskIdx(t Tasks, n int, ss SortStatus) int {
 	if ss.sorted && ss.sortedby == "ID" {
