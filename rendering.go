@@ -26,7 +26,7 @@ func getOptions(options [NMAX]string, n int) int {
 	var valid bool = false
 	for !valid {
 		showinline("Pilih opsi: ")
-		fmt.Scan(&x)
+		fmt.Scanln(&x)
 		if x >= 1 && x <= n {
 			valid = true
 		} else {
